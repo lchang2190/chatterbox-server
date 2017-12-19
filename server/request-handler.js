@@ -29,7 +29,11 @@ var defaultCorsHeaders = {
 };
 
 var objectId = 1;
-var messages = [];
+var messages = [{
+  username: 'tony',
+  text: 'asjdaskd',
+  objectId: objectId
+}];
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -73,13 +77,17 @@ var requestHandler = function(request, response) {
     
     request.on('data', (chunk) => {
       body.push(chunk);
+      console.log('chunk receieved');
+      console.log(body.length);
       console.log(chunk);
+      console.log(JSON.parse(chunk));
     });
 
     request.on('end', () => {
       console.log('end');
       //body = Buffer.concat(body).toString();
       // TODO: Handle chunking somehow?
+      console.log(body.length);
       body = JSON.parse(body);
       objectId += 1;
       body.objectId = objectId;
