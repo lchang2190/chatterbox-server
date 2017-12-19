@@ -28,8 +28,14 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
-
-var messages = [];
+var objectId = 1;
+var messages = [
+  {
+    username: 'tony',
+    text: 'whats up?',
+    objectId: objectId
+  }
+];
 
 module.exports = function(request, response) {
   // Request and Response come from node's http module.
@@ -55,6 +61,15 @@ module.exports = function(request, response) {
     statusCode = 200;
   }
 
+  if (request.method === 'OPTIONS') {
+    statusCode = 200;
+    console.log(request.url);
+  }
+
+  // if (request.method === 'OPTIONS') {
+  //   console.log('this is an options request')
+  // }
+
   if (request.method === 'POST') {
     statusCode = 201;
     let body = [];
@@ -63,7 +78,11 @@ module.exports = function(request, response) {
       body.push(chunk);
     }).on('end', () => {
       body = Buffer.concat(body).toString();
-      messages.push(JSON.parse(body));
+      body = JSON.parse(body);
+      objectId += 1;
+      body.objectId = objectId; 
+      
+      messages.push(body);
       console.log(messages);
     });
   }
